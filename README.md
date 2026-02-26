@@ -58,18 +58,40 @@ The solution has been refactored to meet enterprise standards:
 ### Prerequisites
 - Flutter SDK (3.0.0+)
 - Android Studio / VS Code with Flutter extension
-- An emulator or physical device
+- Windows SDK (for Windows desktop builds)
+- Chrome / Edge (for Web builds)
 
-### Installation
-1. Clone the repository.
-2. Navigate to the project root:
+### Build & Run
+1. Clone the repository and navigate to the project root.
+2. Fetch dependencies:
    ```bash
    flutter pub get
    ```
-3. Run the application:
-   ```bash
-   flutter run
-   ```
+3. Run the application on your desired platform:
+   - **For Windows Desktop:**
+     ```bash
+     flutter run -d windows
+     ```
+   - **For Web (Chrome/Edge):**
+     ```bash
+     flutter run -d edge
+     # or
+     flutter run -d chrome
+     ```
+   - **For Android Emulator (if running):**
+     ```bash
+     flutter run
+     ```
+
+---
+
+## 🐛 Known Issues & Ongoing Debugging
+
+**Backend Multipart/Form-Data Crash (`user/register`)**
+- Currently, the backend registration endpoint crashes when receiving a valid `multipart/form-data` payload containing the required `registration_proof` file.
+- **Symptom:** The backend returns an HTML 500 error string: `Sorry, there was an error uploading your file.{"success":false,"message":"Social id required."}`
+- **Cause:** The server's file upload parser (likely PHP `move_uploaded_file` or folder permissions) is failing. When the file upload drops, the server loses the `$_POST` payload, subsequently failing the `social_id` validation checkpoint and returning a false-positive "Social id required" error.
+- **Action Required:** Backend developer needs to verify directory permissions and multipart parsing logic on the `user/register` endpoint.
 
 ---
 
